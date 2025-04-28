@@ -1,0 +1,45 @@
+name : build and upload to s3
+
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22  # ganti dengan versi Node.js yang kamu pakai
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+  build-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: cekot repo
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: make zip
+        run: |
+          zip -r crudapp.zip index.js package.json package.lock.json crud_db.sql public/ views/
+
+      - name: uploud to s3
+        run: |
+          aws s3 cp crudapp.zip s3://${{ secrets.S3_BUCKET_NAME }}/crudsapp.zip
