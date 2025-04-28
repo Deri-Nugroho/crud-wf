@@ -42,4 +42,4 @@ jobs:
 
       - name: uploud to s3
         run: |
-          aws s3 cp crudapp.zip s3://${{ secrets.S3_BUCKET_NAME }}/crudsapp.zip
+          aws s3 cp crudapp.zip s3://${{ secrets.S3_BUCKET_NAME }}/crudapp.zip
