@@ -60,6 +60,10 @@ jobs:
         run: |
           aws ecs create-cluster --cluster-name crud-cluster || echo "Cluster already exists"
 
+      - name: Create CloudWatch log group
+        run: |
+          aws logs create-log-group --log-group-name /ecs/crudapp || true
+        
       - name: Register ECS Task Definition
         run: |
           aws ecs register-task-definition \
