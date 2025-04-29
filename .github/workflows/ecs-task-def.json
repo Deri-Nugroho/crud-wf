@@ -9,8 +9,8 @@
         "essential": true,
         "portMappings": [
           {
-            "containerPort": 3000,
-            "hostPort": 3000,
+            "containerPort": 8000,
+            "hostPort": 8000,
             "protocol": "tcp"
           }
         ],
@@ -18,8 +18,8 @@
           { "name": "NODE_ENV", "value": "production" },
           { "name": "DB_HOST", "value": "${DB_HOST}" },
           { "name": "DB_USER", "value": "${DB_USER}" },
-          { "name": "DB_PASS", "value": "${DB_PASS}" },
-          { "name": "DB_NAME", "value": "${DB_NAME}" }
+          { "name": "DB_PASSWORD", "value": "${DB_PASSWORD}" },
+          { "name": "DB_DATABASEE", "value": "${DB_DATABASE}" }
         ],
         "logConfiguration": {
           "logDriver": "awslogs",

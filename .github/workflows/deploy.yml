@@ -83,11 +83,6 @@ jobs:
           task-definition: ecs-task-def.json
           container-name: crud-app
           image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
-          environment-variables: |
-            NODE_ENV=production
-            DB_HOST=${{ secrets.DB_HOST }}
-            DB_USER=${{ secrets.DB_USER }}
-            DB_PASS=${{ secrets.DB_PASS }}
 
       - name: Deploy ECS task
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
