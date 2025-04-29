@@ -59,52 +59,51 @@ jobs:
         run: |
           aws ecs create-cluster --cluster-name crud-cluster
 
-          - name: Create ECS Task Definition
-          run: |
-            aws ecs register-task-definition \
-              --family crudapp-task \
-              --network-mode awsvpc \
-              --execution-role-arn arn:aws:iam::636784510794:role/LabRole \
-              --task-role-arn arn:aws:iam::636784510794:role/LabRole \
-              --container-definitions '[
-                {
-                  "name": "crudapp",
-                  "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:latest",
-                  "essential": true,
-                  "portMappings": [
-                    {
-                      "containerPort": 8000,
-                      "hostPort": 8000,
-                      "protocol": "tcp"
-                    }
-                  ],
-                  "environment": [
-                    { "name": "NODE_ENV", "value": "production" },
-                    { "name": "DB_HOST", "value": "${DB_HOST}" },
-                    { "name": "DB_USER", "value": "${DB_USER}" },
-                    { "name": "DB_PASSWORD", "value": "${DB_PASSWORD}" },
-                    { "name": "DB_DATABASE", "value": "${DB_DATABASE}" }
-                  ],
-                  "logConfiguration": {
-                    "logDriver": "awslogs",
-                    "options": {
-                      "awslogs-group": "/ecs/crudapp",
-                      "awslogs-region": "${AWS_REGION}",
-                      "awslogs-stream-prefix": "ecs"
-                    }
+      - name: Create ECS Task Definition
+        run: |
+          aws ecs register-task-definition \
+            --family crudapp-task \
+            --network-mode awsvpc \
+            --execution-role-arn arn:aws:iam::636784510794:role/LabRole \
+            --task-role-arn arn:aws:iam::636784510794:role/LabRole \
+            --container-definitions '[ 
+              {
+                "name": "crudapp",
+                "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:latest",
+                "essential": true,
+                "portMappings": [
+                  {
+                    "containerPort": 8000,
+                    "hostPort": 8000,
+                    "protocol": "tcp"
+                  }
+                ],
+                "environment": [
+                  { "name": "NODE_ENV", "value": "production" },
+                  { "name": "DB_HOST", "value": "${DB_HOST}" },
+                  { "name": "DB_USER", "value": "${DB_USER}" },
+                  { "name": "DB_PASSWORD", "value": "${DB_PASSWORD}" },
+                  { "name": "DB_DATABASE", "value": "${DB_DATABASE}" }
+                ],
+                "logConfiguration": {
+                  "logDriver": "awslogs",
+                  "options": {
+                    "awslogs-group": "/ecs/crudapp",
+                    "awslogs-region": "${AWS_REGION}",
+                    "awslogs-stream-prefix": "ecs"
                   }
                 }
-              ]' \
-              --requires-compatibilities FARGATE \
-              --cpu "1024" \
-              --memory "3072" \
-              --runtime-platform operatingSystemFamily=LINUX
-        
+              }
+            ]' \
+            --requires-compatibilities FARGATE \
+            --cpu "1024" \
+            --memory "3072" \
+            --runtime-platform operatingSystemFamily=LINUX
 
       - name: Create ECS Service
         run: |
           aws ecs create-service \
-            --cluster my-ecs-cluster \
+            --cluster crud-cluster \
             --service-name crud-service \
             --task-definition crudapp-task \
             --desired-count 1 \
@@ -145,7 +144,7 @@ jobs:
       - name: Deploy ECS task
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.register-task-def.outputs.task-definition }}
+          task-definition: ${{ steps.create-task-def.outputs.task-definition }}
           service: crud-service  # Use your ECS service name
           cluster: crud-cluster  # Use your ECS cluster name
           wait-for-service-stability: true
