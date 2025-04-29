@@ -66,7 +66,7 @@ jobs:
             --network-mode awsvpc \
             --execution-role-arn arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/LabRole \
             --task-role-arn arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/LabRole \
-            --container-definitions file://task-def.json \
+            --container-definitions file://ecs-task-def.json \
             --requires-compatibilities FARGATE \
             --cpu "1024" \
             --memory "3072" \
