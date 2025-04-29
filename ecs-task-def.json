@@ -37,6 +37,7 @@
     "requiresCompatibilities": ["FARGATE"],
     "cpu": "1024",
     "memory": "3072",
+    "taskRoleArn": "arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecsTaskExecutionRole",
     "runtimePlatform": {
       "operatingSystemFamily": "LINUX"
     }
