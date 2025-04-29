@@ -1,45 +1,41 @@
 {
-    "family": "crudapp-task",
-    "networkMode": "awsvpc",
-    "executionRoleArn": "arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/LabRole",
-    "containerDefinitions": [
-      {
-        "name": "crudapp",
-        "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:latest",
-        "essential": true,
-        "portMappings": [
-          {
-            "containerPort": 8000,
-            "hostPort": 8000,
-            "protocol": "tcp"
-          }
-        ],
-        "environment": [
-          { "name": "NODE_ENV", "value": "production" },
-          { "name": "DB_HOST", "value": "${DB_HOST}" },
-          { "name": "DB_USER", "value": "${DB_USER}" },
-          { "name": "DB_PASSWORD", "value": "${DB_PASSWORD}" },
-          { "name": "DB_DATABASEE", "value": "${DB_DATABASE}" }
-        ],
-        "logConfiguration": {
-          "logDriver": "awslogs",
-          "options": {
-            "awslogs-group": "/ecs/crudapp",
-            "awslogs-region": "${AWS_REGION}",
-            "awslogs-stream-prefix": "ecs",
-            "awslogs-create-group": "true",
-            "mode": "non-blocking",
-            "max-buffer-size": "25m"
-          }
+  "family": "crudapp-task",
+  "networkMode": "awsvpc",
+  "executionRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/LabRole",
+  "taskRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/LabRole",
+  "containerDefinitions": [
+    {
+      "name": "crudapp",
+      "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "NODE_ENV", "value": "production" },
+        { "name": "DB_HOST", "value": "${DB_HOST}" },
+        { "name": "DB_USER", "value": "${DB_USER}" },
+        { "name": "DB_PASSWORD", "value": "${DB_PASSWORD}" },
+        { "name": "DB_DATABASE", "value": "${DB_DATABASE}" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/crudapp",
+          "awslogs-region": "${AWS_REGION}",
+          "awslogs-stream-prefix": "ecs"
         }
       }
-    ],
-    "requiresCompatibilities": ["FARGATE"],
-    "cpu": "1024",
-    "memory": "3072",
-    "taskRoleArn": "arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/LabRole",
-    "runtimePlatform": {
-      "operatingSystemFamily": "LINUX"
     }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "3072",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX"
   }
-  
+}
